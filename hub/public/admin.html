@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alpebo Hub — Admin</title>
+<meta name="robots" content="noindex, nofollow" />
+<style>
+:root{--ink:#161A1F;--steel:#232B33;--ivory:#F5F3EE;--line:#E5E1D8;--safety:#E8641B;--ok:#2EA043;--err:#D64545}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 Inter,system-ui,sans-serif;background:var(--ivory);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header b{font-size:16px;letter-spacing:.03em}
+header input{flex:1;min-width:200px;padding:9px 12px;border-radius:8px;border:0;font:inherit}
+main{max-width:1060px;margin:0 auto;padding:22px 20px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tabs button{padding:9px 16px;border-radius:8px;border:1px solid var(--line);background:#fff;font:600 14px Inter,sans-serif;cursor:pointer}
+.tabs button.on{background:var(--safety);border-color:var(--safety);color:#fff}
+.panel{display:none}
+.panel.on{display:block}
+.bloc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.bloc h3{margin:0 0 10px;font-size:16px}
+textarea{width:100%;min-height:140px;font:13px/1.5 ui-monospace,Consolas,monospace;border:1px solid var(--line);border-radius:8px;padding:10px}
+input[type=text]{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:8px}
+label.cb{display:inline-flex;align-items:center;gap:8px;font-size:14px;margin:6px 0}
+button.act{padding:9px 16px;border-radius:8px;border:0;background:var(--steel);color:#fff;font:600 13.5px Inter,sans-serif;cursor:pointer;margin:8px 8px 0 0}
+button.act.pub{background:var(--safety)}
+button.act.del{background:var(--err)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+select{padding:6px 8px;border-radius:6px;border:1px solid var(--line);font:inherit}
+#msg{position:fixed;right:18px;bottom:18px;padding:12px 18px;border-radius:10px;color:#fff;font-weight:600;display:none}
+.mut{color:#6B7280;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <b>ALPEBO HUB</b>
+  <input id="tok" type="password" placeholder="ADMIN_TOKEN" />
+  <button class="act" onclick="saveTok()">Conectare</button>
+</header>
+<main>
+  <div class="tabs">
+    <button class="on" data-tab="continut">Conținut</button>
+    <button data-tab="articole">Articole</button>
+    <button data-tab="leads">Leads</button>
+  </div>
+
+  <div class="panel on" id="p-continut">
+    <p class="mut">Fiecare secțiune e un JSON suprapus câmp cu câmp peste conținutul implicit al site-ului
+    (hero, services, projects, about, contact). <b>Salvează</b> = draft; <b>Publică</b> = vizibil pe site
+    (și în HTML-ul static la următorul build).</p>
+    <div class="bloc">
+      <input id="newKey" type="text" placeholder="secțiune nouă (ex: hero)" style="max-width:280px" />
+      <button class="act" onclick="addSection()">Adaugă secțiunea</button>
+    </div>
+    <div id="sections"></div>
+  </div>
+
+  <div class="panel" id="p-articole">
+    <div class="bloc">
+      <h3>Articol (creare / editare după slug)</h3>
+      <input type="text" id="a-slug" placeholder="slug (ex: cum-alegi-constructorul)" />
+      <input type="text" id="a-title" placeholder="titlu" />
+      <input type="text" id="a-excerpt" placeholder="rezumat (apare în listă)" />
+      <input type="text" id="a-cover" placeholder="URL imagine copertă (opțional)" />
+      <input type="text" id="a-seo-title" placeholder="titlu SEO (opțional)" />
+      <input type="text" id="a-seo-desc" placeholder="descriere SEO (opțional)" />
+      <textarea id="a-body" placeholder="Corpul articolului. Paragrafe despărțite prin rând gol; subtitluri pe rânduri care încep cu «## »."></textarea>
+      <label class="cb"><input type="checkbox" id="a-pub" /> publicat</label><br />
+      <button class="act pub" onclick="savePost()">Salvează articolul</button>
+    </div>
+    <div class="bloc"><h3>Toate articolele</h3><div id="posts"></div></div>
+  </div>
+
+  <div class="panel" id="p-leads">
+    <div class="bloc"><h3>Cereri de ofertă</h3><div id="leads"></div></div>
+  </div>
+</main>
+<div id="msg"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+let TOKEN = sessionStorage.getItem("alpebo_admin_token") || "";
+$("#tok").value = TOKEN;
+
+function saveTok() {
+  TOKEN = $("#tok").value.trim();
+  sessionStorage.setItem("alpebo_admin_token", TOKEN);
+  loadAll();
+}
+
+function msg(text, bad) {
+  const el = $("#msg");
+  el.textContent = text;
+  el.style.background = bad ? "var(--err)" : "var(--ok)";
+  el.style.display = "block";
+  clearTimeout(msg.t);
+  msg.t = setTimeout(() => (el.style.display = "none"), 3200);
+}
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, {
+    ...opts,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + TOKEN,
+      ...(opts.headers || {}),
+    },
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
+  return j;
+}
+
+document.querySelectorAll(".tabs button").forEach((b) =>
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach((x) => x.classList.toggle("on", x === b));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("on", p.id === "p-" + b.dataset.tab));
+  })
+);
+
+/* ---------- conținut ---------- */
+async function loadSections() {
+  const wrap = $("#sections");
+  try {
+    const { sections } = await api("/api/v1/site-content/draft");
+    wrap.innerHTML = "";
+    if (!sections.length) wrap.innerHTML = '<p class="mut">Nicio secțiune încă — adaugă una mai sus.</p>';
+    for (const s of sections) {
+      const div = document.createElement("div");
+      div.className = "bloc";
+      const data = s.draft != null ? s.draft : s.published;
+      div.innerHTML =
+        "<h3>" + s.section_key + (s.published_at ? ' <span class="mut">(publicat ' + new Date(s.published_at).toLocaleString("ro-RO") + ")</span>" : ' <span class="mut">(nepublicat)</span>') + "</h3>" +
+        "<textarea></textarea>" +
+        '<button class="act">Salvează draft</button>' +
+        '<button class="act pub">Publică</button>';
+      div.querySelector("textarea").value = JSON.stringify(data ?? {}, null, 2);
+      div.querySelector("button.act:not(.pub)").onclick = async () => {
+        try {
+          const data = JSON.parse(div.querySelector("textarea").value);
+          await api("/api/v1/site-content/" + s.section_key, { method: "PUT", body: JSON.stringify({ data }) });
+          msg("Draft salvat: " + s.section_key);
+        } catch (e) { msg(e.message, true); }
+      };
+      div.querySelector("button.pub").onclick = async () => {
+        try {
+          await api("/api/v1/site-content/" + s.section_key + "/publish", { method: "POST" });
+          msg("Publicat: " + s.section_key);
+          loadSections();
+        } catch (e) { msg(e.message, true); }
+      };
+      wrap.appendChild(div);
+    }
+  } catch (e) {
+    wrap.innerHTML = '<p class="mut">' + e.message + "</p>";
+  }
+}
+
+async function addSection() {
+  const key = $("#newKey").value.trim();
+  if (!key) return;
+  try {
+    await api("/api/v1/site-content/" + key, { method: "PUT", body: JSON.stringify({ data: {} }) });
+    $("#newKey").value = "";
+    loadSections();
+  } catch (e) { msg(e.message, true); }
+}
+
+/* ---------- articole ---------- */
+async function loadPosts() {
+  const wrap = $("#posts");
+  try {
+    const { posts } = await api("/api/v1/posts-admin");
+    if (!posts.length) { wrap.innerHTML = '<p class="mut">Niciun articol.</p>'; return; }
+    wrap.innerHTML =
+      "<table><tr><th>Slug</th><th>Titlu</th><th>Stare</th><th></th></tr>" +
+      posts.map((p) =>
+        "<tr><td>" + p.slug + "</td><td>" + p.title + "</td><td>" + (p.published ? "publicat" : "draft") + "</td>" +
+        '<td><button class="act" data-edit="' + p.slug + '">Editează</button>' +
+        '<button class="act del" data-del="' + p.slug + '">Șterge</button></td></tr>'
+      ).join("") + "</table>";
+    wrap.querySelectorAll("[data-edit]").forEach((b) => (b.onclick = () => editPost(b.dataset.edit)));
+    wrap.querySelectorAll("[data-del]").forEach((b) => (b.onclick = async () => {
+      if (!confirm("Ștergi articolul „" + b.dataset.del + "”?")) return;
+      try { await api("/api/v1/posts/" + b.dataset.del, { method: "DELETE" }); loadPosts(); } catch (e) { msg(e.message, true); }
+    }));
+  } catch (e) {
+    wrap.innerHTML = '<p class="mut">' + e.message + "</p>";
+  }
+}
+
+async function editPost(slug) {
+  try {
+    // endpointul de admin întoarce și articolele draft, cu tot cu corp
+    const { post } = await api("/api/v1/posts-admin/" + slug);
+    const p = post || {};
+    $("#a-slug").value = slug;
+    $("#a-title").value = p.title || "";
+    $("#a-excerpt").value = p.excerpt || "";
+    $("#a-cover").value = p.cover || "";
+    $("#a-seo-title").value = p.seo_title || "";
+    $("#a-seo-desc").value = p.seo_description || "";
+    $("#a-body").value = p.body || "";
+    $("#a-pub").checked = !!p.published_at || !!p.published;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (e) { msg(e.message, true); }
+}
+
+async function savePost() {
+  try {
+    await api("/api/v1/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        slug: $("#a-slug").value,
+        title: $("#a-title").value,
+        excerpt: $("#a-excerpt").value,
+        cover: $("#a-cover").value,
+        seo_title: $("#a-seo-title").value,
+        seo_description: $("#a-seo-desc").value,
+        body: $("#a-body").value,
+        published: $("#a-pub").checked,
+      }),
+    });
+    msg("Articol salvat");
+    loadPosts();
+  } catch (e) { msg(e.message, true); }
+}
+
+/* ---------- leads ---------- */
+const STATUSES = ["nou", "contactat", "ofertat", "castigat", "pierdut"];
+async function loadLeads() {
+  const wrap = $("#leads");
+  try {
+    const { leads } = await api("/api/v1/leads");
+    if (!leads.length) { wrap.innerHTML = '<p class="mut">Nicio cerere încă.</p>'; return; }
+    wrap.innerHTML =
+      "<table><tr><th>Data</th><th>Nume</th><th>Contact</th><th>Mesaj</th><th>Status</th></tr>" +
+      leads.map((l) =>
+        "<tr><td>" + new Date(l.created_at).toLocaleString("ro-RO") + "</td>" +
+        "<td>" + l.name + (l.company ? "<br><span class='mut'>" + l.company + "</span>" : "") + "</td>" +
+        "<td>" + (l.phone || "") + "<br><span class='mut'>" + (l.email || "") + "</span></td>" +
+        "<td>" + (l.message || "") + "</td>" +
+        '<td><select data-id="' + l.id + '">' +
+        STATUSES.map((s) => '<option value="' + s + '"' + (s === l.status ? " selected" : "") + ">" + s + "</option>").join("") +
+        "</select></td></tr>"
+      ).join("") + "</table>";
+    wrap.querySelectorAll("select").forEach((sel) => (sel.onchange = async () => {
+      try {
+        await api("/api/v1/leads/" + sel.dataset.id, { method: "PATCH", body: JSON.stringify({ status: sel.value }) });
+        msg("Status actualizat");
+      } catch (e) { msg(e.message, true); }
+    }));
+  } catch (e) {
+    wrap.innerHTML = '<p class="mut">' + e.message + "</p>";
+  }
+}
+
+function loadAll() { loadSections(); loadPosts(); loadLeads(); }
+if (TOKEN) loadAll();
+</script>
+</body>
+</html>
