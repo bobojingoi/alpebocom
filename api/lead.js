@@ -4,7 +4,9 @@
    ca formularul să fie testabil înainte să existe Hub + chei. */
 import { sendEmail } from "./_email.js";
 
-const curat = (v, max) => String(v || "").trim().slice(0, max);
+/* Doar string-uri: un obiect/array trimis în loc de text ar ajunge în CRM ca
+   „[object Object]" prin String(). Orice altceva = gol → pică pe missing_fields. */
+const curat = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

@@ -5,7 +5,7 @@
 export const SITE_URL = "https://alpebocom.ro";
 
 const DESCRIERE_FIRMA =
-  "ALPEBOCOM SRL — proiectare, execuție și consultanță pentru construcții industriale, rezidențiale și de infrastructură, din 2004.";
+  "ALPEBOCOM SRL, Brașov — rețele de apă și canalizare, drumuri, stații de pompare, devieri de rețele și construcții civile și industriale, din 2004.";
 
 const STATIC_META = {
   "/": {

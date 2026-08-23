@@ -135,13 +135,22 @@ async function loadSections() {
         "<h3>" + s.section_key + (s.published_at ? ' <span class="mut">(publicat ' + new Date(s.published_at).toLocaleString("ro-RO") + ")</span>" : ' <span class="mut">(nepublicat)</span>') + "</h3>" +
         "<textarea></textarea>" +
         '<button class="act">Salvează draft</button>' +
-        '<button class="act pub">Publică</button>';
+        '<button class="act pub">Publică</button>' +
+        '<button class="act del">Șterge secțiunea</button>';
       div.querySelector("textarea").value = JSON.stringify(data ?? {}, null, 2);
-      div.querySelector("button.act:not(.pub)").onclick = async () => {
+      div.querySelector("button.act:not(.pub):not(.del)").onclick = async () => {
         try {
           const data = JSON.parse(div.querySelector("textarea").value);
           await api("/api/v1/site-content/" + s.section_key, { method: "PUT", body: JSON.stringify({ data }) });
           msg("Draft salvat: " + s.section_key);
+        } catch (e) { msg(e.message, true); }
+      };
+      div.querySelector("button.del").onclick = async () => {
+        if (!confirm("Ștergi secțiunea „" + s.section_key + "” (draft și publicat)?")) return;
+        try {
+          await api("/api/v1/site-content/" + s.section_key, { method: "DELETE" });
+          msg("Șters: " + s.section_key);
+          loadSections();
         } catch (e) { msg(e.message, true); }
       };
       div.querySelector("button.pub").onclick = async () => {

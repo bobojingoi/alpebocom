@@ -3,7 +3,9 @@
 ## Ce este
 Site-ul firmei de construcții **ALPEBOCOM SRL** (CUI 16454119, J20/1155/2004, din 2004) —
 proiectare, execuție și consultanță pentru construcții industriale, rezidențiale și de
-infrastructură. Domeniu: alpebocom.ro — azi atașat proiectului Vercel `v0-fork-of-alpebo-construction-website` (prototipul v0 din brief, Next.js); la lansare domeniul se mută pe proiectul `alpebocom`.
+infrastructură — concret: rețele apă/canalizare, drumuri, stații de pompare, devieri de rețele
+pentru infrastructură mare, construcții civile și industriale, în jurul Brașovului.
+Domeniu: alpebocom.ro — azi pe un **WordPress** (vezi „Site-ul vechi” mai jos).
 Site React (Vite), pre-randat la build, plus un backend separat („Alpebo Hub") cu CMS,
 cereri de ofertă (leads) și blog. **Arhitectura copiază proiectul Roots Villas** (repo
 `roots`) — aceleași tipare, aceleași lecții.
@@ -17,7 +19,7 @@ taskuri ALP-nn). Brief-urile și pozele de portofoliu: Google Drive (folderul
 | | Site | Hub |
 |---|---|---|
 | Cod | rădăcina + `src/`, `api/` | `hub/` |
-| Live | alpebocom-five.vercel.app (domeniul alpebocom.ro încă pe vechiul proiect v0) | alpebocom-hub.vercel.app |
+| Live | alpebocom-five.vercel.app (alpebocom.ro e încă pe WordPress-ul vechi) | alpebocom-hub.vercel.app |
 | Ce e | React + funcții serverless Vercel | Express + Postgres (Supabase) |
 | Config | `vercel.json` din rădăcină | `hub/vercel.json` |
 | Vercel | proiect `alpebocom`, cont `office-2642's projects`, legat de GitHub `main` | proiect `alpebocom-hub`, același cont, Root Directory `hub` |
@@ -29,6 +31,30 @@ logică duplicată (ex. emailuri), se actualizează manual în ambele locuri.
 
 Baza de date folosește schema Postgres **`alpebo`** — separată intenționat de schema `hub`
 (Roots), ca cele două proiecte să poată împărți aceeași instanță Supabase fără coliziuni.
+
+## Datele firmei (de pe site-ul live, 23.08.2026)
+Sediu: Str. Nisipului 155, Cristian, jud. Brașov, 507055 (înregistrată în Hunedoara —
+J20/1155/2004 — dar operează din Brașov). CIF RO16454119 (plătitoare de TVA). Telefon
+principal +40 371 070 000; General Manager Aleodor Jingoi +40 720 100 700; Project Manager
+Lucian Ștefancu +40 724 089 602. Email publicat: **office@alpebocom.ro** — brief-ul scria
+contact@alpebocom.ro; am folosit office@ peste tot, **de confirmat cu clientul**.
+Servicii (lista publicată de firmă): Rețele apă și canalizare · Amenajări drumuri și
+trotuare · Stații de pompare / Rezervoare · Deviere rețele infrastructură mare · Construcții
+civile și industriale. Footerul cere linkurile A.N.P.C. / S.O.L. (sunt puse).
+
+## Site-ul vechi (WordPress) — de știut pentru cutover
+- Hosting LiteSpeed la 85.9.45.213, WordPress + Elementor, tema Sedona (cea din brief).
+  **Domeniul e și înregistrat pe proiectul Vercel `v0-fork-of-alpebo-construction-website`**
+  (prototipul v0), fără DNS — la cutover trebuie scos de acolo ca să poată fi pus pe `alpebocom`.
+- REST API deschis: `/wp-json/wp/v2/portfolio` = **19 proiecte reale** (texte + poze —
+  sursa pentru portofoliu, împreună cu folderul din Drive); `/wp-json/wp/v2/services` și
+  `/posts` = conținut demo din temă (NU se migrează).
+- Rute reale de redirecționat 301: `/portfolio/<slug>/` → `/proiecte/<slug>` (păstrăm
+  slugurile), `/portfolio/` și `/portfolio-gallery/` → `/proiecte`, `/blog-standard/` → `/blog`,
+  `/politica-de-cookies/` → `/politica-cookies`, `/despre-noi/` → `/#despre`,
+  `/contact/` → `/#contact`, `/services/` → `/#servicii`. Paginile demo (`/home-2/`,
+  `/elements/`, `/sample-page/`, `/about/`, `/blog-masonry/`…) → `/`. Articolele demo
+  din 2019 → `/blog`.
 
 ## Build și pre-randare
 
@@ -104,7 +130,14 @@ slugurile de blog din `virtual:hub-posts`.
   Lecția Roots: `null` tratat ca valoare reală ștergea imaginile. Listele se înlocuiesc
   întregi, nu se îmbină element cu element.
 - Proiectele din portofoliu sunt deocamdată **carduri de exemplu** în `DEFAULT_CONTENT`
-  (marcate „(exemplu)"). Cele reale se publică din Hub, secțiunea `projects`.
+  (marcate „(exemplu)"). Cele reale (19, pe WordPress-ul vechi) se publică din Hub,
+  secțiunea `projects`, cu aceleași sluguri ca pe vechiul site.
+- **Hub-ul fără `DATABASE_URL` ține totul în memorie** — pe serverless asta înseamnă
+  instanțe cu conținut diferit și date pierdute la reciclare. Până la Supabase, hub-ul
+  live e demo: nu publica conținut real acolo.
+- Contul Vercel `office-2642's projects` e pe plan **Hobby** (Roots Team e Pro). Înainte de
+  cutover: decizie explicită — transfer în echipă Pro sau acceptarea riscului (Vercel nu
+  permite uz comercial pe Hobby).
 - Imaginile sunt `<img>` cu `alt`, nu `background-image` (lecția SEO-13 Roots) — excepție
   doar fundalurile pur decorative.
 

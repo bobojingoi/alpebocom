@@ -1,6 +1,8 @@
 /* Textele paginilor legale. Termeni + Confidențialitate vin din brieful
    clientului (doc „Brief Alpebocom" din Drive) — acolo telefonul e lăsat
-   „[adaugă număr actual]", deci aici apare doar emailul până e confirmat.
+   „[adaugă număr actual]", deci aici apare doar emailul. Brief-ul scria
+   contact@alpebocom.ro; site-ul live al firmei publică office@alpebocom.ro,
+   pe care l-am folosit peste tot — de confirmat care căsuță e cea reală.
    Politica de cookie-uri e scrisă de noi pe tipar standard — de validat.
    Rândurile care încep cu "- " se randează ca listă (vezi TextPage.jsx). */
 
@@ -75,7 +77,7 @@ export const LEGAL = {
       {
         h: "10. Contact",
         body: [
-          "Pentru întrebări, sesizări sau solicitări legate de termeni și condiții, ne puteți contacta la contact@alpebocom.ro sau prin formularul de pe www.alpebocom.ro.",
+          "Pentru întrebări, sesizări sau solicitări legate de termeni și condiții, ne puteți contacta la office@alpebocom.ro sau prin formularul de pe www.alpebocom.ro.",
         ],
       },
     ],
@@ -169,7 +171,7 @@ export const LEGAL = {
       {
         h: "10. Contact pentru protecția datelor",
         body: [
-          "Pentru orice întrebări sau cereri legate de datele personale, ne puteți contacta la contact@alpebocom.ro.",
+          "Pentru orice întrebări sau cereri legate de datele personale, ne puteți contacta la office@alpebocom.ro.",
         ],
       },
       {
@@ -213,7 +215,7 @@ export const LEGAL = {
       {
         h: "5. Actualizări și contact",
         body: [
-          "Această politică poate fi actualizată periodic; versiunea curentă este publicată permanent pe această pagină. Întrebări: contact@alpebocom.ro.",
+          "Această politică poate fi actualizată periodic; versiunea curentă este publicată permanent pe această pagină. Întrebări: office@alpebocom.ro.",
         ],
       },
     ],

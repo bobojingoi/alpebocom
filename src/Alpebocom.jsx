@@ -17,10 +17,10 @@ export const HUB_URL = "https://alpebocom-hub.vercel.app";
 
 export const DEFAULT_CONTENT = {
   hero: {
-    eyebrow: "Din 2004, în toată România",
+    eyebrow: "Din 2004 · Brașov",
     title: "Construim solid. Predăm la timp.",
     subtitle:
-      "Proiectare, execuție și consultanță pentru construcții industriale, rezidențiale și de infrastructură.",
+      "Rețele de apă și canalizare, drumuri, stații de pompare și devieri de rețele pentru infrastructură mare — plus construcții civile și industriale, de la proiectare la recepție.",
     ctaPrimary: "Vezi proiectele",
     ctaSecondary: "Cere ofertă de preț",
     image: "",
@@ -30,36 +30,38 @@ export const DEFAULT_CONTENT = {
     title: "Serviciile noastre",
     intro:
       "De la studiul de fezabilitate la recepția finală — un singur partener, responsabil de întregul lanț.",
+    /* Lista de servicii e cea publicată de firmă pe alpebocom.ro (WordPress);
+       descrierile sunt provizorii — se rafinează din Hub. */
     items: [
       {
-        icon: "industrial",
-        title: "Construcții industriale",
-        text: "Hale de producție și depozitare, structuri metalice și beton prefabricat, platforme logistice.",
-      },
-      {
-        icon: "rezidential",
-        title: "Construcții rezidențiale",
-        text: "Locuințe unifamiliale și ansambluri rezidențiale, de la fundație la predarea la cheie.",
-      },
-      {
         icon: "infrastructura",
-        title: "Infrastructură",
-        text: "Drumuri, platforme, rețele edilitare și lucrările de artă aferente.",
-      },
-      {
-        icon: "proiectare",
-        title: "Proiectare",
-        text: "Documentații tehnice complete — DTAC, PT, DE — coordonate pe toate specialitățile.",
-      },
-      {
-        icon: "consultanta",
-        title: "Consultanță tehnică",
-        text: "Dirigenție de șantier, verificări tehnice, asistență în relația cu autoritățile.",
+        title: "Rețele apă și canalizare",
+        text: "Rețele exterioare pentru ansambluri rezidențiale și hale, racorduri, canalizare pluvială — inclusiv lucrări pentru companiile de apă.",
       },
       {
         icon: "renovare",
-        title: "Reabilitări și amenajări",
-        text: "Modernizări, consolidări și recompartimentări pentru clădiri existente.",
+        title: "Amenajări drumuri și trotuare",
+        text: "Modernizări de străzi, trotuare, rigole și podețe, amenajări exterioare pentru instituții.",
+      },
+      {
+        icon: "proiectare",
+        title: "Stații de pompare și rezervoare",
+        text: "Stații de ridicare a presiunii, stații de filtrare, rezervoare de apă potabilă — execuție și punere în funcțiune.",
+      },
+      {
+        icon: "consultanta",
+        title: "Devieri de rețele pentru infrastructură mare",
+        text: "Devieri de conducte și rețele pe traseele autostrăzilor și ale proiectelor urbane (park & ride, noduri rutiere).",
+      },
+      {
+        icon: "industrial",
+        title: "Construcții civile și industriale",
+        text: "Săli de sport, centre de sortare, hale și construcții civile — structură, instalații, finisaje.",
+      },
+      {
+        icon: "rezidential",
+        title: "Proiectare și consultanță",
+        text: "Documentații tehnice, dirigenție de șantier și asistență în relația cu autoritățile, pentru beneficiari publici și privați.",
       },
     ],
   },
@@ -115,18 +117,21 @@ export const DEFAULT_CONTENT = {
   },
   about: {
     title: "Despre Alpebocom",
-    text: "ALPEBOCOM SRL construiește din 2004. Lucrăm cu echipe proprii pe toate fazele — proiectare, execuție, consultanță — pentru beneficiari privați și publici.\n\nCredem în lucrul făcut o singură dată și bine: documentație corectă, șantier disciplinat, termene respectate.",
+    text: "ALPEBOCOM SRL construiește din 2004, cu sediul în Cristian, județul Brașov. Lucrăm cu echipe proprii pe toate fazele — proiectare, execuție, consultanță — pentru beneficiari publici și privați: primării, companii de apă, dezvoltatori imobiliari, industrie.\n\nCredem în lucrul făcut o singură dată și bine: documentație corectă, șantier disciplinat, termene respectate.",
     stats: [
       { value: "2004", label: "anul înființării" },
-      { value: "3", label: "domenii: industrial, rezidențial, infrastructură" },
-      { value: "RO", label: "lucrări în toată țara" },
+      { value: "20+", label: "ani de lucrări în județul Brașov" },
+      { value: "19", label: "proiecte în portofoliu" },
     ],
   },
   contact: {
     title: "Cere ofertă de preț",
     text: "Spune-ne ce vrei să construiești. Revenim cu o estimare în cel mai scurt timp.",
-    phone: "0720 100 700",
-    email: "contact@alpebocom.ro",
+    /* datele publicate de firmă pe alpebocom.ro; brief-ul menționa
+       contact@alpebocom.ro — de clarificat care căsuță e cea reală */
+    phone: "+40 371 070 000",
+    email: "office@alpebocom.ro",
+    address: "Str. Nisipului 155, Cristian, jud. Brașov, 507055",
   },
 };
 
@@ -382,7 +387,11 @@ export function Footer() {
               Proiectare, execuție și consultanță în construcții industriale, rezidențiale și de
               infrastructură.
             </p>
-            <p style={{ marginBottom: 0 }}>ALPEBOCOM SRL · CUI 16454119 · J20/1155/2004</p>
+            <p style={{ marginBottom: 0 }}>
+              ALPEBOCOM SRL · CUI RO16454119 · J20/1155/2004
+              <br />
+              Str. Nisipului 155, Cristian, jud. Brașov
+            </p>
           </div>
           <div>
             <h4>Navigare</h4>
@@ -396,11 +405,18 @@ export function Footer() {
             <Link to="/termeni-si-conditii">Termeni și condiții</Link>
             <Link to="/politica-de-confidentialitate">Politica de confidențialitate</Link>
             <Link to="/politica-cookies">Politica de cookie-uri</Link>
+            {/* obligatorii pentru comercianții din România */}
+            <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer">
+              A.N.P.C. — S.A.L.
+            </a>
+            <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
+              S.O.L. / O.D.R.
+            </a>
           </div>
         </div>
         <div className="ftr-bottom">
           <span>© {new Date().getFullYear()} ALPEBOCOM SRL. Toate drepturile rezervate.</span>
-          <a href="mailto:contact@alpebocom.ro">contact@alpebocom.ro</a>
+          <a href="mailto:office@alpebocom.ro">office@alpebocom.ro</a>
         </div>
       </div>
     </footer>
@@ -526,6 +542,7 @@ export function ContactSection({ data }) {
             <p>
               Email: <a href={"mailto:" + data.email}>{data.email}</a>
             </p>
+            {data.address ? <p>Sediu: {data.address}</p> : null}
             <p>Răspundem de luni până vineri, 8:00–17:00.</p>
           </div>
         </div>
