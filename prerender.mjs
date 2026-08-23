@@ -43,14 +43,15 @@ const esc = (s) =>
 
 /* Head per rută. Fără asta fiecare pagină generată ar purta title/description/
    canonical-ul homepage-ului — i-ar spune Google „nu sunt canonică". */
-function applyMeta(html, meta, canonical, schemas = []) {
+function applyMeta(html, meta, canonical, schemas = [], ogImage = "") {
   let out = html
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(meta.title)}</title>`)
     .replace(/<meta\s+name="description"[\s\S]*?\/>/, `<meta name="description" content="${esc(meta.description)}" />`)
     .replace(/<link rel="canonical"[^>]*\/>/, `<link rel="canonical" href="${canonical}" />`)
     .replace(/<meta property="og:title"[^>]*\/>/, `<meta property="og:title" content="${esc(meta.title)}" />`)
     .replace(/<meta property="og:description"[^>]*\/>/, `<meta property="og:description" content="${esc(meta.description)}" />`)
-    .replace(/<meta property="og:url"[^>]*\/>/, `<meta property="og:url" content="${canonical}" />`);
+    .replace(/<meta property="og:url"[^>]*\/>/, `<meta property="og:url" content="${canonical}" />`)
+    .replace(/<meta property="og:image"[^>]*\/>/, `<meta property="og:image" content="${esc(ogImage)}" />`);
 
   /* `</script>` din date ar închide devreme blocul, de aici escaparea. */
   const blocuri = schemas
@@ -86,7 +87,7 @@ try {
   const { default: App } = await vite.ssrLoadModule("/src/App.jsx");
   const { StaticRouter } = await vite.ssrLoadModule("react-router-dom");
   // aceeași sursă de metadate ca a clientului — un singur loc de schimbat
-  const { metaForRoute, canonicalFor, NOT_FOUND_META } = await vite.ssrLoadModule("/src/seo.js");
+  const { metaForRoute, canonicalFor, NOT_FOUND_META, ogImageForRoute } = await vite.ssrLoadModule("/src/seo.js");
   const { schemasForRoute } = await vite.ssrLoadModule("/src/schema.js");
   /* conținutul disponibil la build (snapshot Hub peste DEFAULT_CONTENT) —
      de aici vin slugurile proiectelor */
@@ -125,7 +126,7 @@ try {
     }
     const post = route.startsWith("/blog/") ? posts.find((p) => "/blog/" + p.slug === route) : null;
     const meta = metaForRoute(route, BUILD_CONTENT, post);
-    const html = applyMeta(template, meta, canonicalFor(route), schemasForRoute(route, BUILD_CONTENT))
+    const html = applyMeta(template, meta, canonicalFor(route), schemasForRoute(route, BUILD_CONTENT), ogImageForRoute(route, BUILD_CONTENT))
       .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
     const outDir = route === "/" ? DIST : path.join(DIST, route);
     fs.mkdirSync(outDir, { recursive: true });

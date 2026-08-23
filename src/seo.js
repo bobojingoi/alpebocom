@@ -4,6 +4,21 @@
 
 export const SITE_URL = "https://alpebocom.ro";
 
+/* Imaginea OG implicită (rehostată în Supabase Storage — nu de pe WordPress,
+   care dispare la cutover). Paginile de proiect folosesc imaginea proiectului. */
+export const DEFAULT_OG_IMAGE =
+  "https://xsxjcwyjtlspsuyshuhn.supabase.co/storage/v1/object/public/media/og/og-default.jpg";
+
+export function ogImageForRoute(route, raw = null) {
+  const clean = route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route;
+  if (clean.startsWith("/proiecte/") && raw && raw.projects) {
+    const slug = clean.slice("/proiecte/".length);
+    const p = (raw.projects.items || []).find((x) => x && x.slug === slug);
+    if (p && p.image) return p.image;
+  }
+  return DEFAULT_OG_IMAGE;
+}
+
 const DESCRIERE_FIRMA =
   "ALPEBOCOM SRL, Brașov — rețele de apă și canalizare, drumuri, stații de pompare, devieri de rețele și construcții civile și industriale, din 2004.";
 

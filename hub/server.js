@@ -233,6 +233,18 @@ const store = hasDb
       },
     };
 
+/* La publicare, conținutul nou apare imediat la vizitatori (fetch la runtime),
+   dar HTML-ul pre-randat rămâne vechi până la un rebuild — lecția Roots. Deploy
+   hook-ul (env DEPLOY_HOOK_URL) declanșează rebuild-ul site-ului; e chemat
+   fire-and-forget, ca publicarea să nu aștepte după Vercel. */
+function triggerSiteDeploy(reason) {
+  const url = process.env.DEPLOY_HOOK_URL;
+  if (!url) return;
+  fetch(url, { method: "POST" })
+    .then((r) => console.log("[deploy-hook] " + reason + " -> HTTP " + r.status))
+    .catch((e) => console.error("[deploy-hook] " + reason + " a eșuat: " + e.message));
+}
+
 /* ============================== API ============================== */
 
 app.get("/api/health", (req, res) => res.json({ ok: true, db: hasDb }));
@@ -268,6 +280,7 @@ app.delete("/api/v1/site-content/:key", requireAdmin, async (req, res) => {
 app.post("/api/v1/site-content/:key/publish", requireAdmin, async (req, res) => {
   const ok = await store.publish(String(req.params.key || "").trim());
   if (!ok) return res.status(404).json({ error: "nu există draft pentru această secțiune" });
+  triggerSiteDeploy("publicare " + req.params.key);
   res.json({ ok: true });
 });
 
@@ -310,12 +323,14 @@ app.post("/api/v1/posts", requireAdmin, async (req, res) => {
     seo_description: str(b.seo_description, 500),
     published: !!b.published,
   });
+  if (b.published) triggerSiteDeploy("articol " + slug);
   res.json({ ok: true });
 });
 
 app.delete("/api/v1/posts/:slug", requireAdmin, async (req, res) => {
   const ok = await store.deletePost(String(req.params.slug));
   if (!ok) return res.status(404).json({ error: "articol inexistent" });
+  triggerSiteDeploy("ștergere articol " + req.params.slug);
   res.json({ ok: true });
 });
 

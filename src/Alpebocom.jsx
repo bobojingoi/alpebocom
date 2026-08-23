@@ -442,7 +442,7 @@ export function Shell({ children }) {
 export function ProjectCard({ p }) {
   return (
     <Link to={"/proiecte/" + p.slug} className="proj">
-      {p.image ? <img src={p.image} alt={p.imageAlt || p.title} loading="lazy" /> : <span className="ph" />}
+      {p.image ? <img src={p.image} alt={p.imageAlt || p.title} loading="lazy" decoding="async" /> : <span className="ph" />}
       <span className="proj-body">
         {p.category ? <span className="proj-tag">{p.category}</span> : null}
         <h3>{p.title}</h3>
@@ -560,7 +560,15 @@ function Hero({ data, services }) {
   const strip = [...services.items.slice(0, 3).map((s) => s.title), data.eyebrow];
   return (
     <section className="hero">
-      {data.image ? <img className="hero-img" src={data.image} alt={data.imageAlt || ""} /> : null}
+      {data.image ? (
+        <img
+          className="hero-img"
+          src={data.image}
+          alt={data.imageAlt || ""}
+          fetchPriority="high"
+          decoding="async"
+        />
+      ) : null}
       <div className="hero-grad" aria-hidden="true" />
       <div className="container">
         <div className="hero-in">

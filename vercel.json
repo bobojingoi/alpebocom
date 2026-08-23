@@ -64,5 +64,87 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/portfolio/:slug",
+      "destination": "/proiecte/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio/:slug/",
+      "destination": "/proiecte/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/proiecte",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio/",
+      "destination": "/proiecte",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-gallery",
+      "destination": "/proiecte",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-gallery/",
+      "destination": "/proiecte",
+      "permanent": true
+    },
+    {
+      "source": "/blog-standard",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog-standard/",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/politica-de-cookies",
+      "destination": "/politica-cookies",
+      "permanent": true
+    },
+    {
+      "source": "/politica-de-cookies/",
+      "destination": "/politica-cookies",
+      "permanent": true
+    },
+    {
+      "source": "/despre-noi",
+      "destination": "/#despre",
+      "permanent": true
+    },
+    {
+      "source": "/despre-noi/",
+      "destination": "/#despre",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/services",
+      "destination": "/#servicii",
+      "permanent": true
+    },
+    {
+      "source": "/services/",
+      "destination": "/#servicii",
+      "permanent": true
+    }
   ]
 }
