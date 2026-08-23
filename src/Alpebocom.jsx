@@ -191,7 +191,9 @@ export const CSS = `
 :root{
   --ink:#161A1F; --steel:#232B33; --slate:#5B6672;
   --paper:#FFFFFF; --ivory:#F5F3EE; --line:#E5E1D8;
-  --safety:#E8641B; --safety-press:#C8500F;
+  --safety:#E8641B;          /* accent decorativ pe fundal închis (iconițe, taguri) */
+  --safety-btn:#B0470B;      /* fundal butoane / eyebrow cu TEXT: alb ≈ 5.6:1, pe ivory ≈ 5:1 (WCAG AA) */
+  --safety-press:#984008;
   --radius:14px;
   --font-display:"Archivo",system-ui,sans-serif;
   --font-body:"Inter",system-ui,sans-serif;
@@ -203,18 +205,21 @@ img{max-width:100%;display:block}
 h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0}
 .container{max-width:1160px;margin:0 auto;padding:0 22px}
 .section{padding:72px 0}
-.eyebrow{display:inline-block;font:600 12px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--safety);margin-bottom:14px}
+.eyebrow{display:inline-block;font:700 12px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--safety-btn);margin-bottom:14px}
+.hero .eyebrow,.contact .eyebrow,.page-head .eyebrow{color:var(--gold,#E9B872)}
 .section-title{font-size:clamp(26px,3.4vw,38px);font-weight:800;letter-spacing:-.01em}
 .section-intro{max-width:640px;color:var(--slate);margin-top:12px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:10px;border:0;cursor:pointer;font:600 15px var(--font-body);text-decoration:none;transition:transform .15s,background .15s,border-color .15s}
 .btn:active{transform:translateY(1px)}
-.btn-primary{background:var(--safety);color:#fff}
+.btn-primary{background:var(--safety-btn);color:#fff}
 .btn-primary:hover{background:var(--safety-press)}
 .btn-primary:disabled{opacity:.6;cursor:default}
 .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
 .btn-ghost:hover{border-color:#fff}
 .btn-dark{background:var(--steel);color:#fff}
 
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 8px 0}
+.skip:focus{left:0}
 .hdr{position:sticky;top:0;z-index:50;background:rgba(22,26,31,.93);backdrop-filter:blur(8px);color:#fff}
 .hdr-in{display:flex;align-items:center;justify-content:space-between;height:66px}
 .logo{display:flex;align-items:center;gap:10px;font:800 17px var(--font-display);letter-spacing:.04em;color:#fff;text-decoration:none}
@@ -254,7 +259,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0}
 .proj .ph{position:absolute;inset:0;background:repeating-linear-gradient(135deg,#2A333D 0 22px,#242C35 22px 44px)}
 .proj::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(10,12,15,.85))}
 .proj-body{position:relative;z-index:1;padding:20px}
-.proj-tag{display:inline-block;background:var(--safety);color:#fff;font:600 11px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:6px;margin-bottom:10px}
+.proj-tag{display:inline-block;background:var(--safety-btn);color:#fff;font:600 11px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:6px;margin-bottom:10px}
 .proj h3{font-size:19px;font-weight:700}
 .proj-meta{color:rgba(255,255,255,.75);font-size:13px;margin-top:4px}
 .proj-more{margin-top:32px}
@@ -292,7 +297,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0}
 .ftr{background:var(--ink);color:rgba(255,255,255,.72);font-size:14px}
 .ftr-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:34px;padding:54px 0 40px}
 @media(max-width:760px){.ftr-grid{grid-template-columns:1fr}}
-.ftr h4{color:#fff;font:700 15px var(--font-display);margin:0 0 14px}
+.ftr h2{color:#fff;font:700 15px var(--font-display);margin:0 0 14px}
 .ftr a{color:rgba(255,255,255,.72);text-decoration:none;display:block;margin-bottom:9px}
 .ftr a:hover{color:#fff}
 .ftr-bottom{border-top:1px solid rgba(255,255,255,.12);padding:18px 0;font-size:12.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:rgba(255,255,255,.5)}
@@ -394,14 +399,14 @@ export function Footer() {
             </p>
           </div>
           <div>
-            <h4>Navigare</h4>
+            <h2>Navigare</h2>
             <Link to="/proiecte">Proiecte</Link>
             <Link to="/blog">Blog</Link>
             <Link to="/#despre">Despre noi</Link>
             <Link to="/#contact">Cere ofertă de preț</Link>
           </div>
           <div>
-            <h4>Legal</h4>
+            <h2>Legal</h2>
             <Link to="/termeni-si-conditii">Termeni și condiții</Link>
             <Link to="/politica-de-confidentialitate">Politica de confidențialitate</Link>
             <Link to="/politica-cookies">Politica de cookie-uri</Link>
@@ -430,8 +435,9 @@ export function Shell({ children }) {
           la pre-randare („Archivo" → &quot;Archivo&quot;), CSS-ul iese invalid
           fără JS și hidratarea pică (erori #425/#423). prerender.mjs are gardă. */}
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      <a className="skip" href="#main">Sari la conținut</a>
       <Header />
-      <main>{children}</main>
+      <main id="main">{children}</main>
       <Footer />
     </>
   );

@@ -30,12 +30,25 @@ export function schemasForRoute(route, raw = {}) {
         addressCountry: "RO",
       },
       knowsAbout: [
-        "construcții industriale",
-        "construcții rezidențiale",
-        "infrastructură",
-        "proiectare",
-        "consultanță tehnică",
+        "rețele de apă și canalizare",
+        "stații de pompare și rezervoare",
+        "amenajări drumuri și trotuare",
+        "devieri de rețele pentru infrastructură",
+        "construcții civile și industriale",
+        "proiectare și consultanță tehnică",
       ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Servicii Alpebocom",
+        itemListElement: [
+          "Rețele de apă și canalizare",
+          "Amenajări drumuri și trotuare",
+          "Stații de pompare și rezervoare",
+          "Devieri de rețele pentru infrastructură mare",
+          "Construcții civile și industriale",
+          "Proiectare și consultanță tehnică",
+        ].map((s) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: s } })),
+      },
     },
   ];
 }

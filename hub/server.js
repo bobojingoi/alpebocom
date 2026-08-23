@@ -19,6 +19,11 @@ const CORS_ORIGINS = (process.env.CORS_ORIGINS ||
   "https://alpebocom.ro,https://www.alpebocom.ro,http://localhost:5173"
 ).split(",").map((s) => s.trim());
 
+/* Originile de preview Vercel (alpebocom-*.vercel.app) sunt permise prin pattern —
+   altfel un deploy de preview n-ar putea citi API-ul. Producția rămâne pe lista fixă. */
+const PREVIEW_RE = /^https:\/\/alpebocom(-[a-z0-9-]+)?\.vercel\.app$/;
+const originPermis = (o) => !!o && (CORS_ORIGINS.includes(o) || PREVIEW_RE.test(o));
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   /* `Vary: Origin` se pune NECONDIȚIONAT (lecția roots-hub): rutele publice au
@@ -29,7 +34,7 @@ app.use((req, res, next) => {
      și pagina cade tăcut pe DEFAULT_CONTENT. Cu Vary pe toate răspunsurile,
      fiecare valoare de Origin primește propria intrare în cache. */
   res.setHeader("Vary", "Origin");
-  if (origin && CORS_ORIGINS.includes(origin)) {
+  if (originPermis(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Sync-Secret");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
