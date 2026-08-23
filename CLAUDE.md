@@ -23,7 +23,7 @@ taskuri ALP-nn). Brief-urile și pozele de portofoliu: Google Drive (folderul
 | Live | alpebocom-five.vercel.app (alpebocom.ro e încă pe WordPress-ul vechi) | alpebocom-hub.vercel.app |
 | Ce e | React + funcții serverless Vercel | Express + Postgres (Supabase) |
 | Config | `vercel.json` din rădăcină | `hub/vercel.json` |
-| Vercel | proiect `alpebocom`, cont `office-2642's projects`, legat de GitHub `main` | proiect `alpebocom-hub`, același cont, Root Directory `hub` |
+| Vercel | proiect `alpebocom` în **Roots Team (Pro)**, legat de GitHub `main` | proiect `alpebocom-hub`, Roots Team, Root Directory `hub` |
 
 **Sunt două proiecte Vercel distincte.** O modificare în `hub/` NU ajunge live prin
 deploy-ul site-ului și invers. Fiecare proiect are „Ignored Build Step" (setat prin API):
@@ -145,9 +145,10 @@ slugurile de blog din `virtual:hub-posts`.
 - **Hub-ul fără `DATABASE_URL` ține totul în memorie** — pe serverless asta înseamnă
   instanțe cu conținut diferit și date pierdute la reciclare. Până la Supabase, hub-ul
   live e demo: nu publica conținut real acolo.
-- Contul Vercel `office-2642's projects` e pe plan **Hobby** (Roots Team e Pro). Înainte de
-  cutover: decizie explicită — transfer în echipă Pro sau acceptarea riscului (Vercel nu
-  permite uz comercial pe Hobby).
+- Proiectele au fost create în contul personal (Hobby) și **transferate în Roots Team (Pro)**
+  pe 23.08.2026 — același team ca roots/roots-hub, dar proiecte separate. Domeniul
+  alpebocom.ro e încă înregistrat pe vechiul proiect v0 din contul personal.
+- Baza de date: proiect **Supabase separat** de cel al Roots (decizie 23.08.2026), schema `alpebo`.
 - Imaginile sunt `<img>` cu `alt`, nu `background-image` (lecția SEO-13 Roots) — excepție
   doar fundalurile pur decorative.
 
