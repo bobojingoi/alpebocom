@@ -25,7 +25,10 @@ taskuri ALP-nn). Brief-urile și pozele de portofoliu: Google Drive (folderul
 | Vercel | proiect `alpebocom`, cont `office-2642's projects`, legat de GitHub `main` | proiect `alpebocom-hub`, același cont, Root Directory `hub` |
 
 **Sunt două proiecte Vercel distincte.** O modificare în `hub/` NU ajunge live prin
-deploy-ul site-ului și invers. Variabilele de mediu se setează de două ori
+deploy-ul site-ului și invers. Fiecare proiect are „Ignored Build Step" (setat prin API):
+site-ul se rebuild-uiește doar când se schimbă ceva în afara `hub/`, hub-ul doar când se
+schimbă `hub/`. Conținutul publicat din Hub NU e o schimbare de cod — pentru el e nevoie de
+redeploy manual / deploy hook (task pe board). Variabilele de mediu se setează de două ori
 (`LEADS_SYNC_SECRET` există în ambele). Codul nu se poate importa între ele — dacă apare
 logică duplicată (ex. emailuri), se actualizează manual în ambele locuri.
 
@@ -65,7 +68,13 @@ npm run build   =  vite build  &&  node prerender.mjs
 `prerender.mjs` randează fiecare rută publică cu `renderToString` și scrie
 `dist/<rută>/index.html` cu conținut real — crawlerele AI nu execută JavaScript.
 Injectează `<title>`, `description`, `canonical`, Open Graph și JSON-LD
-(`GeneralContractor` pe homepage). Scrie și `dist/404.html` (404 real pe Vercel).
+(`GeneralContractor` pe homepage). Scrie și `dist/404.html` (404 real pe Vercel) și
+`dist/sitemap.xml` (referit din `public/robots.txt`).
+
+⚠️ CSS-ul se injectează cu `<style dangerouslySetInnerHTML>`, niciodată `<style>{css}</style>`:
+React escapează textul din `<style>` la SSR (`"Archivo"` → `&quot;Archivo&quot;`), CSS-ul
+iese invalid fără JS și hidratarea pică pe toate paginile. `prerender.mjs` are gardă și
+oprește build-ul dacă reapare.
 
 Conținutul ajunge în HTML pentru că **două module virtuale îl aduc la build**
 (plugin în `vite.config.js`):

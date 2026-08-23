@@ -101,10 +101,18 @@ try {
 
   const renderRoute = (route) => {
     globalThis.__ALPEBO_PATH = route;
-    return renderToString(
+    const html = renderToString(
       React.createElement(StaticRouter, { location: route }, React.createElement(App))
     );
+    /* Gardă: un <style> cu entități HTML înseamnă că cineva a scris
+       <style>{css}</style> în loc de dangerouslySetInnerHTML — CSS-ul ar fi
+       invalid fără JS și hidratarea ar pica pe fiecare pagină. */
+    if (/<style[^>]*>[^<]*&(quot|#x27|#39|amp);/.test(html)) {
+      throw new Error("CSS escapat într-un <style> — folosește dangerouslySetInnerHTML");
+    }
+    return html;
   };
+  const urls = [];
 
   for (const route of routes) {
     let appHtml;
@@ -122,9 +130,20 @@ try {
     const outDir = route === "/" ? DIST : path.join(DIST, route);
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), html);
+    urls.push(canonicalFor(route));
     written++;
     console.log(`[prerender] ${route}  (${(html.length / 1024).toFixed(0)} KB)`);
   }
+
+  /* sitemap.xml cu exact paginile pre-randate (canonicalele lor); robots.txt îl
+     referă. Paginile publicate după build intră la următorul deploy. */
+  const sitemap =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join("\n") +
+    "\n</urlset>\n";
+  fs.writeFileSync(path.join(DIST, "sitemap.xml"), sitemap);
+  console.log(`[prerender] /sitemap.xml (${urls.length} URL-uri)`);
 
   /* 404 real: Vercel servește dist/404.html cu status 404 pentru orice cale
      care nu se potrivește cu un fișier static sau un rewrite. */

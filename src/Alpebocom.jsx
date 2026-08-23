@@ -426,7 +426,10 @@ export function Footer() {
 export function Shell({ children }) {
   return (
     <>
-      <style>{CSS}</style>
+      {/* dangerouslySetInnerHTML, nu {CSS}: React escapează textul din <style>
+          la pre-randare („Archivo" → &quot;Archivo&quot;), CSS-ul iese invalid
+          fără JS și hidratarea pică (erori #425/#423). prerender.mjs are gardă. */}
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <Header />
       <main>{children}</main>
       <Footer />
