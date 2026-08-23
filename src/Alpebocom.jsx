@@ -11,7 +11,7 @@ import { IS_BROWSER } from "./env.js";
 /* Alpebo Hub — CMS-ul. La build, conținutul vine prin virtual:hub-snapshot;
    la runtime se face fetch, ca publicările din Hub să apară fără redeploy.
    Hub inexistent/picat = se rămâne pe DEFAULT_CONTENT, nimic nu crapă. */
-export const HUB_URL = "https://alpebo-hub.vercel.app";
+export const HUB_URL = "https://alpebocom-hub.vercel.app";
 
 /* ============================== conținut ============================== */
 

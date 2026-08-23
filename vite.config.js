@@ -67,7 +67,7 @@ const HUB_SNAPSHOT_ID = "virtual:hub-snapshot";
 const HUB_POSTS_ID = "virtual:hub-posts";
 
 function hubContentSnapshot(env) {
-  const hubUrl = env.HUB_URL || "https://alpebo-hub.vercel.app";
+  const hubUrl = env.HUB_URL || "https://alpebocom-hub.vercel.app";
   const enabled = env.HUB_SNAPSHOT !== "0";
   let cache;
   let postsCache;

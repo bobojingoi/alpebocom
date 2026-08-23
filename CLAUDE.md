@@ -3,7 +3,7 @@
 ## Ce este
 Site-ul firmei de construcții **ALPEBOCOM SRL** (CUI 16454119, J20/1155/2004, din 2004) —
 proiectare, execuție și consultanță pentru construcții industriale, rezidențiale și de
-infrastructură. Domeniu: alpebocom.ro (azi pe un WordPress vechi; la lansare se face cutover).
+infrastructură. Domeniu: alpebocom.ro — azi atașat proiectului Vercel `v0-fork-of-alpebo-construction-website` (prototipul v0 din brief, Next.js); la lansare domeniul se mută pe proiectul `alpebocom`.
 Site React (Vite), pre-randat la build, plus un backend separat („Alpebo Hub") cu CMS,
 cereri de ofertă (leads) și blog. **Arhitectura copiază proiectul Roots Villas** (repo
 `roots`) — aceleași tipare, aceleași lecții.
@@ -17,9 +17,10 @@ taskuri ALP-nn). Brief-urile și pozele de portofoliu: Google Drive (folderul
 | | Site | Hub |
 |---|---|---|
 | Cod | rădăcina + `src/`, `api/` | `hub/` |
-| Live | alpebocom.ro (de creat pe Vercel) | alpebo-hub.vercel.app (de creat) |
+| Live | alpebocom-five.vercel.app (domeniul alpebocom.ro încă pe vechiul proiect v0) | alpebocom-hub.vercel.app |
 | Ce e | React + funcții serverless Vercel | Express + Postgres (Supabase) |
 | Config | `vercel.json` din rădăcină | `hub/vercel.json` |
+| Vercel | proiect `alpebocom`, cont `office-2642's projects`, legat de GitHub `main` | proiect `alpebocom-hub`, același cont, Root Directory `hub` |
 
 **Sunt două proiecte Vercel distincte.** O modificare în `hub/` NU ajunge live prin
 deploy-ul site-ului și invers. Variabilele de mediu se setează de două ori
