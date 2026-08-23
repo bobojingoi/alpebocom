@@ -123,8 +123,9 @@ slugurile de blog din `virtual:hub-posts`.
   email (Resend, `api/_email.js`). Fără chei = dry-run care tot răspunde ok.
 
 **Hub** (`hub/`)
-- `server.js` — Express: `/api/v1/site-content` (+draft/publish), `/api/v1/posts*`,
-  `/api/v1/leads`. Stocare Postgres sau, fără `DATABASE_URL`, în memorie (doar dev).
+- `server.js` — Express: `/api/v1/site-content` (+draft/publish/delete), `/api/v1/posts*`,
+  `/api/v1/leads`. Stocare Postgres (Supabase, live din 24.08.2026) sau, fără
+  `DATABASE_URL`, în memorie (doar dev local).
 - `db.js` / `schema.sql` — schema `alpebo` (site_content, posts, leads); DDL idempotent
   la prima cerere. **Modifici una → modifici ambele.**
 - `public/admin.html` — admin vanilla JS, un singur fișier: secțiuni JSON, articole, leads.
@@ -148,7 +149,11 @@ slugurile de blog din `virtual:hub-posts`.
 - Proiectele au fost create în contul personal (Hobby) și **transferate în Roots Team (Pro)**
   pe 23.08.2026 — același team ca roots/roots-hub, dar proiecte separate. Domeniul
   alpebocom.ro e încă înregistrat pe vechiul proiect v0 din contul personal.
-- Baza de date: proiect **Supabase separat** de cel al Roots (decizie 23.08.2026), schema `alpebo`.
+- Baza de date: proiect **Supabase separat** de al Roots — proiectul `alpebocom`
+  (ref `xsxjcwyjtlspsuyshuhn`, regiunea eu-west-2/Londra), schema `alpebo`. Conexiunea:
+  prin pooler (`aws-0-eu-west-2.pooler.supabase.com:6543`, transaction mode) — conexiunea
+  directă e IPv6-only și Vercel n-o atinge. `DATABASE_URL` e pe Vercel (production+preview)
+  și local în `hub/.env`. Funcțiile hub-ului rulează în `lhr1` (Londra), lângă DB.
 - Imaginile sunt `<img>` cu `alt`, nu `background-image` (lecția SEO-13 Roots) — excepție
   doar fundalurile pur decorative.
 
