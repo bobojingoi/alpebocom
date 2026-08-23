@@ -1,11 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "alpebocom-site",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 5173
-    }
+    { "name": "dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 5173 },
+    { "name": "hub", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--prefix", "hub"], "port": 4000 }
   ]
 }

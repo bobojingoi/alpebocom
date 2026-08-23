@@ -1,7 +1,8 @@
 # Alpebocom — context proiect
 
 ## Ce este
-Site-ul firmei de construcții **ALPEBOCOM SRL** (CUI 16454119, J20/1155/2004, din 2004) —
+Proiect propriu al utilizatorului (nu e client): site-ul și hub-ul firmei de construcții
+**ALPEBOCOM SRL** (CUI 16454119, J20/1155/2004, din 2004) —
 proiectare, execuție și consultanță pentru construcții industriale, rezidențiale și de
 infrastructură — concret: rețele apă/canalizare, drumuri, stații de pompare, devieri de rețele
 pentru infrastructură mare, construcții civile și industriale, în jurul Brașovului.
