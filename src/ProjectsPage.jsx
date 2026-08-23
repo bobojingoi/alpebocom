@@ -54,18 +54,23 @@ export function ProjectPage() {
               src={p.image}
               alt={p.imageAlt || p.title}
               style={{ borderRadius: 14, marginBottom: 26 }}
+              fetchPriority="high"
+              decoding="async"
             />
-          ) : null}
-          {Array.isArray(p.highlights) && p.highlights.length ? (
-            <ul>
-              {p.highlights.map((h, i) => (
-                <li key={i}>{h}</li>
-              ))}
-            </ul>
           ) : null}
           {(p.body || p.summary || "").split("\n\n").filter(Boolean).map((par, i) => (
             <p key={i}>{par}</p>
           ))}
+          {Array.isArray(p.highlights) && p.highlights.length ? (
+            <>
+              <h2>Ce am executat</h2>
+              <ul>
+                {p.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
           {Array.isArray(p.images) && p.images.length ? (
             <div className="gallery">
               {p.images.map((img, i) => (
