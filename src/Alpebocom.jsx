@@ -247,7 +247,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:36px}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
-.card .ic{width:44px;height:44px;border-radius:10px;background:#FBEADF;color:var(--safety);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.card .ic{width:44px;height:44px;border-radius:10px;background:#FBEADF;color:var(--safety-btn);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .card h3{font-size:18px;font-weight:700;margin-bottom:8px}
 .card p{color:var(--slate);font-size:14.5px;margin:0}
 
@@ -270,7 +270,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;margin:0}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:560px){.stats{grid-template-columns:1fr}}
 .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center}
-.stat b{display:block;font:800 26px var(--font-display);color:var(--safety)}
+.stat b{display:block;font:800 26px var(--font-display);color:var(--safety-btn)}
 .stat span{font-size:13px;color:var(--slate)}
 
 .contact{background:var(--steel);color:#fff}
@@ -411,8 +411,8 @@ export function Footer() {
             <Link to="/politica-de-confidentialitate">Politica de confidențialitate</Link>
             <Link to="/politica-cookies">Politica de cookie-uri</Link>
             {/* obligatorii pentru comercianții din România */}
-            <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer">
-              A.N.P.C. — S.A.L.
+            <a href="https://anpc.ro/" target="_blank" rel="noopener noreferrer">
+              A.N.P.C.
             </a>
             <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
               S.O.L. / O.D.R.

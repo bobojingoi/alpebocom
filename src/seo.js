@@ -55,6 +55,16 @@ export const NOT_FOUND_META = {
   description: "Pagina căutată nu există sau a fost mutată.",
 };
 
+/* Meta description ideal ~150-160 caractere: taie la ultima limită de cuvânt
+   sub prag și adaugă „…", ca Google să nu afișeze o propoziție tăiată la mijloc. */
+export function clipDesc(text, max = 158) {
+  const t = String(text || "").replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const sp = cut.lastIndexOf(" ");
+  return (sp > max * 0.6 ? cut.slice(0, sp) : cut).replace(/[\s.,;:·-]+$/, "") + "…";
+}
+
 export function metaForRoute(route, raw = null, post = null) {
   const clean = route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route;
   if (STATIC_META[clean]) return STATIC_META[clean];
@@ -66,11 +76,12 @@ export function metaForRoute(route, raw = null, post = null) {
     if (p) {
       return {
         title: `${p.title} — proiect Alpebocom`,
-        description:
+        description: clipDesc(
           p.summary ||
-          [p.category, p.location && "în " + p.location, "— proiect executat de Alpebocom."]
-            .filter(Boolean)
-            .join(" "),
+            [p.category, p.location && "în " + p.location, "— proiect executat de Alpebocom."]
+              .filter(Boolean)
+              .join(" ")
+        ),
       };
     }
     return NOT_FOUND_META;
@@ -80,7 +91,7 @@ export function metaForRoute(route, raw = null, post = null) {
     if (post) {
       return {
         title: post.seo_title || `${post.title} — Blog Alpebocom`,
-        description: post.seo_description || post.excerpt || DESCRIERE_FIRMA,
+        description: clipDesc(post.seo_description || post.excerpt || DESCRIERE_FIRMA),
       };
     }
     return { title: "Articol — Blog Alpebocom", description: DESCRIERE_FIRMA };
